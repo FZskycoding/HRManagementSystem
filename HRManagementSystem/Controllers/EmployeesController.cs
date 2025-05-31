@@ -145,6 +145,18 @@ namespace HRManagementSystem.Controllers
             {
                 return NotFound();
             }
+            // 檢查是否有重複的姓名
+            bool isNameExists = await _context.Employees.AnyAsync(e => e.Id != employee.Id && e.Name == employee.Name);
+            if (isNameExists)
+            {
+                ModelState.AddModelError("Name", "已有相同的員工姓名，請重新輸入。");
+            }
+            // 檢查是否有重複的 Email
+            bool isEmailExists = await _context.Employees.AnyAsync(e => e.Id != employee.Id && e.Email == employee.Email);
+            if (isEmailExists)
+            {
+                ModelState.AddModelError("Email", "此 Email 已被使用，請重新輸入。");
+            }
 
             if (ModelState.IsValid)
             {
@@ -154,6 +166,8 @@ namespace HRManagementSystem.Controllers
                     existingEmployee.Name = employee.Name;
                     existingEmployee.Email = employee.Email;
                     existingEmployee.Department = employee.Department;
+
+                    
 
                     // 若有上傳新照片
                     if (photo != null && photo.Length > 0)

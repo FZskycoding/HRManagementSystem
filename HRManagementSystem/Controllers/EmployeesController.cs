@@ -61,8 +61,22 @@ namespace HRManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Email,Department")] Employee employee, IFormFile? photo)
         {
+            // 檢查是否有重複的姓名
+            bool isNameExists = await _context.Employees.AnyAsync(e => e.Name == employee.Name);
+            if (isNameExists)
+            {
+                ModelState.AddModelError("Name", "已有相同的員工姓名，請重新輸入。");
+            }
+            // 檢查是否有重複的 Email
+            bool isEmailExists = await _context.Employees.AnyAsync(e => e.Email == employee.Email);
+            if (isEmailExists)
+            {
+                ModelState.AddModelError("Email", "此 Email 已被使用，請重新輸入。");
+            }
+
             if (ModelState.IsValid)
             {
+                // 上傳照片邏輯
                 if(photo != null && photo.Length > 0)
                 {
                     // 建立唯一檔案名稱（避免覆蓋）

@@ -20,9 +20,16 @@ namespace HRManagementSystem.Controllers
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
-            return View(await _context.Employees.ToListAsync());
+            var employees = from e in _context.Employees select e;
+            
+            if (!string.IsNullOrEmpty(search))
+            {
+                employees = employees.Where(e => e.Name.Contains(search) || e.Email.Contains(search));
+            }
+
+            return View(await employees.ToListAsync());
         }
 
         // GET: Employees/Details/5

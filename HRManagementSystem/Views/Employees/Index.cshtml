@@ -3,8 +3,12 @@
 @{
     ViewData["Title"] = "Index";
 }
-
 <h1>員工列表</h1>
+<form asp-controller="Employees" asp-action="Index" method="get">
+    <input type="text" name="search" value="@ViewContext.HttpContext.Request.Query["search"]" placeholder="輸入名稱或 Email 查詢" class="form-control" />
+    <button type="submit" class="btn btn-primary mt-2">搜尋</button>
+</form>
+
 
 <p>
     <a asp-action="Create">Create New</a>

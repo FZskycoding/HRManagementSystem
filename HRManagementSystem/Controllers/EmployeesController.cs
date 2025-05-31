@@ -20,13 +20,27 @@ namespace HRManagementSystem.Controllers
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index(string? search)
+        public async Task<IActionResult> Index(string? search, string? departmentFilter)
         {
+            // 傳遞部門下拉選單資料到 View
+            ViewData["DepartmentFilter"] = new SelectList(
+                new[] { "篩選全部部門", "A", "B", "C", "D", "E" },
+                departmentFilter
+            );
+
             var employees = from e in _context.Employees select e;
-            
+
+            // 關鍵字搜尋
             if (!string.IsNullOrEmpty(search))
             {
                 employees = employees.Where(e => e.Name.Contains(search) || e.Email.Contains(search));
+            }
+
+
+            // 部門篩選（忽略 ALL）
+            if (!string.IsNullOrEmpty(departmentFilter) && departmentFilter != "篩選全部部門")
+            {
+                employees = employees.Where(e => e.Department == departmentFilter);
             }
 
             return View(await employees.ToListAsync());

@@ -2,14 +2,29 @@
 
 
 <h1>員工列表</h1>
-<form asp-controller="Employees" asp-action="Index" method="get">
-    <input type="text" name="search" value="@ViewContext.HttpContext.Request.Query["search"]" placeholder="輸入名稱或 Email 查詢" class="form-control" />
-    <button type="submit" class="btn btn-primary mt-2">搜尋</button>
+<form asp-controller="Employees" asp-action="Index" method="get" class="mb-3">
+    <div class="d-flex align-items-start gap-2">
+        <!-- 搜尋欄 -->
+        <input type="text" name="search"
+               value="@ViewContext.HttpContext.Request.Query["search"]"
+               placeholder="輸入名稱或 Email 查詢"
+               class="form-control" style="max-width: 250px;" />
+
+        <!-- 部門下拉選單 -->
+        <select name="departmentFilter"
+                class="form-control"
+                asp-items="ViewBag.DepartmentFilter"
+                onchange="this.form.submit()"
+                style="max-width: 150px;"></select>
+
+        <!-- 搜尋按鈕 -->
+        <button type="submit" class="btn btn-primary">搜尋</button>
+    </div>
 </form>
 
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">建立新員工</a>
 </p>
 <table class="table">
     <thead>
@@ -49,9 +64,9 @@
             </td>
 
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Edit" asp-route-id="@item.Id">編輯</a> |
                 
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">刪除</a>
             </td>
         </tr>
 }

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>員工列表</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -22,7 +22,7 @@
                 @Html.DisplayNameFor(model => model.Department)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PhotoPath)
+                @Html.DisplayNameFor(model => model.Photo)
             </th>
             <th></th>
         </tr>
@@ -39,19 +39,16 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Department)
             </td>
-                <td>
-                    @if (!string.IsNullOrEmpty(item.PhotoPath))
-                    {
-                        <img src="~/images/@item.PhotoPath" width="60" height="60" />
-                    }
-                </td>
+            <td>
+                @if (!string.IsNullOrEmpty(item.Photo))
+                {
+                    <img src="~/images/@item.Photo" width="60" height="60" />
+                }
+            </td>
 
             <td>
-                @Html.DisplayFor(modelItem => item.PhotoPath)
-            </td>
-            <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>

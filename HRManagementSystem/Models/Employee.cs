@@ -15,6 +15,6 @@ namespace HRManagementSystem.Models
 
         public string Department { get; set; }
 
-        public string? PhotoPath { get; set; }
+        public string? Photo { get; set; }
     }
 }

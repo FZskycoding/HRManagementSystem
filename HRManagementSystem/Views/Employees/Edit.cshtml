@@ -33,11 +33,11 @@
                 <input asp-for="PhotoPath" class="form-control" />
                 <span asp-validation-for="PhotoPath" class="text-danger"></span>
             </div> *@
-            @if (!string.IsNullOrEmpty(Model.PhotoPath))
+            @if (!string.IsNullOrEmpty(Model.Photo))
             {
                 <div class="form-group">
                     <label>Current Photo</label><br />
-                    <img src="~/images/@Model.PhotoPath" width="100" height="100" />
+                    <img src="~/images/@Model.Photo" width="100" height="100" />
                 </div>
             }
 

@@ -77,7 +77,7 @@ namespace HRManagementSystem.Controllers
                     }
 
                     // 記錄檔案名稱到資料庫
-                    employee.PhotoPath = fileName;
+                    employee.Photo = fileName;
 
                 }
                 _context.Add(employee);
@@ -132,9 +132,9 @@ namespace HRManagementSystem.Controllers
                     if (photo != null && photo.Length > 0)
                     {
                         // 刪除舊照片（可選）
-                        if (!string.IsNullOrEmpty(existingEmployee.PhotoPath))
+                        if (!string.IsNullOrEmpty(existingEmployee.Photo))
                         {
-                            var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", existingEmployee.PhotoPath);
+                            var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", existingEmployee.Photo);
                             if (System.IO.File.Exists(oldPath))
                             {
                                 System.IO.File.Delete(oldPath);
@@ -156,7 +156,7 @@ namespace HRManagementSystem.Controllers
                             await photo.CopyToAsync(stream);
                         }
 
-                        existingEmployee.PhotoPath = fileName;
+                        existingEmployee.Photo = fileName;
                     }
 
                     _context.Update(existingEmployee);

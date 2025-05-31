@@ -88,6 +88,7 @@ namespace HRManagementSystem.Controllers
         }
 
         // GET: Employees/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -103,14 +104,17 @@ namespace HRManagementSystem.Controllers
             return View(employee);
         }
 
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Department,PhotoPath")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Department")] Employee employee, IFormFile? photo)
         {
             if (id != employee.Id)
+            {
+                return NotFound();
+            }
+
+            var existingEmployee = await _context.Employees.FindAsync(id);
+            if (existingEmployee == null)
             {
                 return NotFound();
             }
@@ -119,8 +123,45 @@ namespace HRManagementSystem.Controllers
             {
                 try
                 {
-                    _context.Update(employee);
+                    // 更新基本欄位
+                    existingEmployee.Name = employee.Name;
+                    existingEmployee.Email = employee.Email;
+                    existingEmployee.Department = employee.Department;
+
+                    // 若有上傳新照片
+                    if (photo != null && photo.Length > 0)
+                    {
+                        // 刪除舊照片（可選）
+                        if (!string.IsNullOrEmpty(existingEmployee.PhotoPath))
+                        {
+                            var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", existingEmployee.PhotoPath);
+                            if (System.IO.File.Exists(oldPath))
+                            {
+                                System.IO.File.Delete(oldPath);
+                            }
+                        }
+
+                        // 儲存新照片
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(photo.FileName);
+                        var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+
+                        if (!Directory.Exists(uploadPath))
+                        {
+                            Directory.CreateDirectory(uploadPath);
+                        }
+
+                        var filePath = Path.Combine(uploadPath, fileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await photo.CopyToAsync(stream);
+                        }
+
+                        existingEmployee.PhotoPath = fileName;
+                    }
+
+                    _context.Update(existingEmployee);
                     await _context.SaveChangesAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {

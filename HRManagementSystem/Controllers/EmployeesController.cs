@@ -53,6 +53,7 @@ namespace HRManagementSystem.Controllers
         // GET: Employees/Create
         public IActionResult Create()
         {
+            ViewData["Departments"] = new SelectList(new[] { "A", "B", "C", "D", "E" });
             return View();
         }
 
@@ -105,6 +106,8 @@ namespace HRManagementSystem.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewData["Departments"] = new SelectList(new[] { "A", "B", "C", "D", "E" });
             return View(employee);
         }
 
@@ -122,6 +125,9 @@ namespace HRManagementSystem.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["Departments"] = new SelectList(new[] { "A", "B", "C", "D", "E" }, employee.Department);
+
             return View(employee);
         }
 
@@ -197,6 +203,8 @@ namespace HRManagementSystem.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["Departments"] = new SelectList(new[] { "A", "B", "C", "D", "E" }, employee.Department);
+
             return View(employee);
         }
 
